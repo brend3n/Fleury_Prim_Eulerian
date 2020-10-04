@@ -14,6 +14,7 @@ class FleuryPrimSolver{
 	// Constuctor
 	public FleuryPrimSolver (String fileName, int numVertices) throws Exception{
 
+
 		// Opens the passed in file and allows the filed to be read
 		Scanner scan = new Scanner(new File(fileName));
 
@@ -53,14 +54,6 @@ class FleuryPrimSolver{
 		}
 	}
 
-	public void printMatrix(){
-		for(int i = 0; i < N; i++)
-			for(int j = 0; j < N; j++)
-				System.out.printf("%d ",matrix[i][j]);
-			System.out.println();
-
-	}
-
 	// Writes the input string (input) into the first line of the output file (filename)
 	public static void writeToFile(String filename, String input){
 
@@ -91,11 +84,20 @@ class FleuryPrimSolver{
 	}
 
 
+	public void Fleuryify(int startVertex){
+
+		System.out.println("Hello, BRenden");
+
+
+
+	}
+
+
 
 
 	public static void main(final String[] args) throws Exception {
 
-		if (args.length < 4 ){
+		if (args.length < 3 ){
 			System.out.println("To run this program: ");
 			System.out.println("\t javac FleuryPrimSolver [filename] [source] [number of vertices in graph] ");
 			// System.out.println("\t java -jar DijkstraSolver.jar [filename of graph] [source vertex] [end vertex] [number of vertices in graph] ");
@@ -109,8 +111,7 @@ class FleuryPrimSolver{
 			int numberOfVertices = Integer.parseInt(args[2]);
 
 			FleuryPrimSolver solver = new FleuryPrimSolver(fileName, numberOfVertices);
-			solver.printMatrix();
-			// solver.Fleuryify(source);
+			solver.Fleuryify(source);
 		}
 
 
