@@ -23,6 +23,7 @@ class FleuryPrimSolver{
 
 		// Declaring a 2-D  integer array to act as the adjacency matrix
 		matrix = new int[numVertices][numVertices];
+		int [] edgeCount = new int[N];
 
 
 		// Reading in the text file and creating the matrix
@@ -52,6 +53,11 @@ class FleuryPrimSolver{
 					strScan.skip(" ");
 			}
 		}
+
+
+		System.out.print("EdgeCount: ");
+		System.out.print(Arrays.toString(edgeCount));
+
 	}
 
 	// Writes the input string (input) into the first line of the output file (filename)
@@ -84,13 +90,74 @@ class FleuryPrimSolver{
 	}
 
 
-	public void Fleuryify(int startVertex){
+	public ArrayList<Integer> prims_algo(){
 
-		System.out.println("Hello, BRenden");
+		int v;
+		int [] cost = new int[N];
+		boolean [] edge = new boolean[N];
+		// ArrayList<Integer> vertex_set = new ArrayList<Integer>();
+		PriorityQueue<Integer> vertex_set = new PriorityQueue<Integer>();
+		ArrayList<Integer> forest = new ArrayList<Integer>();
+
+		Arrays.fill(cost, 99999);
+		// System.out.print(Arrays.toString(cost));
+		Arrays.fill(edge, false);
+		// System.out.print(Arrays.toString(edge));
+
+		// Initialize the starting vertex here
+		// edge[]
+
+		while(!vertex_set.isEmpty()){
+			// Get vertex with the smallest cost
+
+			// Add vertex into forest
+				// if the edge of the vertex is not in the forest
+					// Add it to the forest
+
+			// Loop through all vertices connected to the current vertex
+			for(int i = 0; i < N; i++){
+
+				// if some other vertex, w, belongs to the vertex_set and vw < cost[w]
+					// cost[w] = cost of the edge vw
+					// edge[w] = edge vw
+			}
+		}
+
+		return forest;
+
+
+
 
 
 
 	}
+
+	// All vertices in the graph have an even degree
+	public void Fleuryify(int start){
+		int current;
+		int edge;
+		int numVertices = N;
+		ArrayList<Integer> circuit = new ArrayList<Integer>();
+		ArrayList<Integer> edge_in_graph = new ArrayList<Integer>();
+
+
+		// Start at any vertex (start vertex)
+		current = start;
+
+		// while (circuit is not complete)
+		while (!edge_in_graph.isEmpty())
+
+			// Choose an edge that doesnt increase connected components
+				// use prims_algo()
+			edge = prims_algo(current);
+
+			// Add edge to the circuit and delete it from the graph
+			circuit.add(edge);
+			edge_in_graph.remove(edge);
+
+
+	}
+
 
 
 
