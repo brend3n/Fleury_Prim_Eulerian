@@ -23,6 +23,8 @@ class FleuryPrimSolver{
 
 		// Declaring a 2-D  integer array to act as the adjacency matrix
 		matrix = new int[numVertices][numVertices];
+
+		// Not sure what this is for
 		int [] edgeCount = new int[N];
 
 
@@ -55,8 +57,8 @@ class FleuryPrimSolver{
 		}
 
 
-		System.out.print("EdgeCount: ");
-		System.out.print(Arrays.toString(edgeCount));
+		// System.out.print("EdgeCount: ");
+		// System.out.print(Arrays.toString(edgeCount));
 
 	}
 
@@ -138,25 +140,47 @@ class FleuryPrimSolver{
 		int edge;
 		int numVertices = N;
 		ArrayList<Integer> circuit = new ArrayList<Integer>();
-		ArrayList<Integer> edge_in_graph = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> edge_in_graph = new ArrayList<ArrayList<Integer>>();
 
 
 		// Start at any vertex (start vertex)
 		current = start;
 
 		// while (circuit is not complete)
-		while (!edge_in_graph.isEmpty())
 
-			// Choose an edge that doesnt increase connected components
-				// use prims_algo()
-			edge = prims_algo(current);
+		// Initalizing arraylists for each node's set of edges
+		for(int i = 0; i < N; i++)
+			edge_in_graph.add(new ArrayList<Integer>());
 
-			// Add edge to the circuit and delete it from the graph
-			circuit.add(edge);
-			edge_in_graph.remove(edge);
+		System.out.print("\nEdge_in_graph: \n" + edge_in_graph.toString() + "\n");
 
+		// Storing the neighborhood of each vertex of the graph
+		for(int i = 0; i < N; i++)
+			for(int j = 0; j < N; j++)
+				if(matrix[i][j] == 1)
+					edge_in_graph.get(i).add(j);
 
-	}
+		// System.out.print("\nEdge_in_graph: \n" + edge_in_graph.toString() + "\n");
+		for(int i = 0; i < N; i++){
+			// Find a better way to print this , Brenden
+
+			// Love, Brenden
+		}
+
+		// while (!edge_in_graph.isEmpty()){
+		//
+		// 	System.out.print("Inside while loop");
+		// 	// Choose an edge that doesnt increase connected components
+		// 		// use prims_algo()
+		// 	// edge = prims_algo(current);
+		// 	// edge = 1
+		// 	// // Add edge to the circuit and delete it from the graph
+		// 	// circuit.add(edge);
+		// 	// edge_in_graph.remove(edge);
+		// }
+		// System.out.print("Outside of while loop");
+
+}
 
 
 
