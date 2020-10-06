@@ -11,6 +11,7 @@ class FleuryPrimSolver{
 	// Creating an adjacency Matrix
 	int [][] matrix;
 	ArrayList<ArrayList<Integer>> edge_in_graph;
+	ArrayList<HashSet<Integer>> edges;
 
 	// Constuctor
 	public FleuryPrimSolver (String fileName, int numVertices) throws Exception{
@@ -57,8 +58,12 @@ class FleuryPrimSolver{
 			}
 		}
 
+		init_LL();
+		init_LH();
 
+	}
 
+	private void init_LL(){
 		// Storing all edges for each vertex
 
 		// Initlializing data structure to store possible moves to make (edges)
@@ -73,7 +78,19 @@ class FleuryPrimSolver{
 			for(int j = 0; j < N; j++)
 				if(matrix[i][j] == 1)
 					edge_in_graph.get(i).add(j);
+	}
+	private void init_LH(){
+		edges = new ArrayList<HashSet<Integer>>();
 
+		// Initalizing arraylists for each node's set of edges
+		for(int i = 0; i < N; i++)
+			edges.add(new HashSet<Integer>());
+
+		// Storing the neighborhood of each vertex of the graph
+		for(int i = 0; i < N; i++)
+			for(int j = 0; j < N; j++)
+				if(matrix[i][j] == 1)
+					edges.get(i).add(j);
 	}
 
 	// Writes the input string (input) into the first line of the output file (filename)
@@ -116,7 +133,7 @@ class FleuryPrimSolver{
 		return degree_sum / 2;
 	}
 
-	public ArrayList<Integer> prims_algo(){
+	public boolean prims_algo(int current, int endPoint){
 
 		int v;
 		int [] cost = new int[N];
@@ -149,44 +166,96 @@ class FleuryPrimSolver{
 			}
 		}
 
-		return forest;
+		return true;
 	}
 
-	// All vertices in the graph have an even degree
-	public void Fleuryify(int start){
-		int current;
-		int edge;
-		int numVertices = N;
-		ArrayList<Integer> circuit = new ArrayList<Integer>();
-
-
-		int graph_size = size_of_graph();
-		System.out.print("graph_size: " + graph_size);
-
-		// Start at any vertex (start vertex)
-		current = start;
+	private void print_neighborhood_graph(){
 
 		// Printing neighborhood of each vertex
 		for(int i = 0; i < N; i++)
 			System.out.println(i +": " + edge_in_graph.get(i).toString());
+	}
+
+	private void print_neighborhood_set(){
+		System.out.println();
+		// Printing neighborhood of each vertex
+		for(int i = 0; i < N; i++)
+			System.out.println(i +": " + edges.get(i).toString());
+		System.out.println();
+
+	}
+	private void print_matrix(int [][] tmp){
+		System.out.println();
+		for(int i = 0; i < N; i++){
+			System.out.print("\n" + i + ":\t");
+			for(int j = 0; j < N; j++)
+				System.out.print(tmp[i][j]);
+		}
+		System.out.println();
+	}
+
+	// Removes inverted instances of an edge in the graph
+	// i.e. edge AB = edge BA, they are the same edge but are each stored in the data structure
+	private void remove_edge_in_graph(int endL, int endR){
+		edge_in_graph.get(endL).remove(endR);
+		edge_in_graph.get(endR).remove(endL);
+	}
+	private void remove_edge_in_set(int endL, int endR){
+		edges.get(endL).remove(endR);
+		edges.get(endR).remove(endL);
+	}
+	private void remove_edge_in_matrix(int endL, int endR, int [][] temp){
+		temp[endL][endR] = 0;
+		temp[endR][endL] = 0;
+	}
+	// All vertices in the graph have an even degree
+	public void Fleuryify(int start){
+		int temp [][];
+		int current;
+		int endPoint = 0;
+		int numVertices = N;
+		int graph_size;
+		ArrayList<Integer> circuit = new ArrayList<Integer>();
+
+		temp = new int [N][N];
+		temp = matrix;
+
+		// Store number of edges in graph
+		graph_size = size_of_graph();
+
+		// Start at any vertex (start vertex)
+		current = start;
 
 
+		// print_neighborhood_graph();
+		print_neighborhood_set();
+		print_matrix(temp);
 
-
-/*
-		while (!edge_in_graph.isEmpty()){
-
-
-
+		System.out.print((char)(current + 65)+ " ");
+		while (graph_size > 0){
 			// Choose an edge that doesnt increase connected components
 				// use prims_algo()
-			// edge = prims_algo(current);
+			for(int del_vert = 0; del_vert < N; del_vert++)
+				if(temp[current][del_vert] != 0 && prims_algo(current, del_vert))
+					endPoint = del_vert;
+
 
 			// Add edge to the circuit and delete it from the graph
 				// circuit.add(edge);
-				// edge_in_graph.remove(edge);
+
+				System.out.print((char)(endPoint + 65) + " ");
+				// Removes edges that have end vertices current and endPoint
+				remove_edge_in_set(current, endPoint);
+				remove_edge_in_matrix(current, endPoint, temp);
+				graph_size--;
+
+				// Walking to the next vertex in the path
+				current = endPoint;
 		}
-*/
+
+		print_neighborhood_set();
+
+		print_matrix(temp);
 
 }
 
