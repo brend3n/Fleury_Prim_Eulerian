@@ -12,6 +12,9 @@ class FleuryPrimSolver{
 	int [][] matrix;
 	ArrayList<ArrayList<Integer>> edge_in_graph;
 	ArrayList<HashSet<Integer>> edges;
+	HashSet<Integer> V_S = new HashSet<Integer>();
+	HashSet<Integer> S = new HashSet<Integer>();
+
 
 	// Constuctor
 	public FleuryPrimSolver (String fileName, int numVertices) throws Exception{
@@ -58,7 +61,7 @@ class FleuryPrimSolver{
 			}
 		}
 
-		init_LL();
+		// init_LL();
 		init_LH();
 
 	}
@@ -76,8 +79,10 @@ class FleuryPrimSolver{
 		// Storing the neighborhood of each vertex of the graph
 		for(int i = 0; i < N; i++)
 			for(int j = 0; j < N; j++)
-				if(matrix[i][j] == 1)
+				if(matrix[i][j] == 1){
 					edge_in_graph.get(i).add(j);
+					V_S.add(j);
+				}
 	}
 	private void init_LH(){
 		edges = new ArrayList<HashSet<Integer>>();
@@ -89,8 +94,10 @@ class FleuryPrimSolver{
 		// Storing the neighborhood of each vertex of the graph
 		for(int i = 0; i < N; i++)
 			for(int j = 0; j < N; j++)
-				if(matrix[i][j] == 1)
+				if(matrix[i][j] == 1){
 					edges.get(i).add(j);
+					V_S.add(j);
+				}
 	}
 
 	// Writes the input string (input) into the first line of the output file (filename)
@@ -133,40 +140,22 @@ class FleuryPrimSolver{
 		return degree_sum / 2;
 	}
 
-	public boolean prims_algo(int current, int endPoint){
+	// The parameters together represent an edge; more specifically, the edge to be deleted
+	public boolean prims_algo_check(int current, int endPoint){
+	/*
+		In the Fleury's algorithm, after choosing an edge leaving the current vertex,
+		run Prim's algorithm to check deleting that edge will not
+		separate the graph into two disconnected sets of edges.
+	*/
 
-		int v;
-		int [] cost = new int[N];
-		boolean [] edge = new boolean[N];
-		// ArrayList<Integer> vertex_set = new ArrayList<Integer>();
-		PriorityQueue<Integer> vertex_set = new PriorityQueue<Integer>();
-		ArrayList<Integer> forest = new ArrayList<Integer>();
-
-		Arrays.fill(cost, 99999);
-		// System.out.print(Arrays.toString(cost));
-		Arrays.fill(edge, false);
-		// System.out.print(Arrays.toString(edge));
-
-		// Initialize the starting vertex here
-		// edge[]
-
-		while(!vertex_set.isEmpty()){
-			// Get vertex with the smallest cost
-
-			// Add vertex into forest
-				// if the edge of the vertex is not in the forest
-					// Add it to the forest
-
-			// Loop through all vertices connected to the current vertex
-			for(int i = 0; i < N; i++){
-
-				// if some other vertex, w, belongs to the vertex_set and vw < cost[w]
-					// cost[w] = cost of the edge vw
-					// edge[w] = edge vw
-			}
-		}
+	/*
+		S = {0,1} <-- Contains all edges from 				0: [1, 2]
+																		1: [0, 3]
+		V-S = {2,3,4,5,6,7,8}
+	*/
 
 		return true;
+
 	}
 
 	private void print_neighborhood_graph(){
@@ -228,6 +217,7 @@ class FleuryPrimSolver{
 
 
 		// print_neighborhood_graph();
+		System.out.print("Hashset: ");
 		print_neighborhood_set();
 		print_matrix(temp);
 
@@ -236,9 +226,8 @@ class FleuryPrimSolver{
 			// Choose an edge that doesnt increase connected components
 				// use prims_algo()
 			for(int del_vert = 0; del_vert < N; del_vert++)
-				if(temp[current][del_vert] != 0 && prims_algo(current, del_vert))
+				if(temp[current][del_vert] != 0 && prims_algo_check(current, del_vert))
 					endPoint = del_vert;
-
 
 			// Add edge to the circuit and delete it from the graph
 				// circuit.add(edge);
@@ -258,10 +247,6 @@ class FleuryPrimSolver{
 		print_matrix(temp);
 
 }
-
-
-
-
 
 	public static void main(final String[] args) throws Exception {
 
