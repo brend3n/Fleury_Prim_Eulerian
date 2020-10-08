@@ -8,14 +8,16 @@ class FleuryPrimSolver{
 	// Stores the number of nodes in a the graph
 	int N;
 
+	int graph_size;
 	// Creating an adjacency Matrix
 	int [][] matrix;
 	ArrayList<ArrayList<Integer>> edge_in_graph;
 	ArrayList<HashSet<Integer>> edges;
 	ArrayList<HashMap<Integer, Boolean>> edges_avail;
-	HashSet<Integer> V_S = new HashSet<Integer>();
+	// HashSet<Integer> V_S = new HashSet<Integer>();
+	ArrayList<Integer> V_S = new ArrayList<Integer>();
 	Iterator node;
-	HashSet<Integer> S = new HashSet<Integer>();
+	ArrayList<Integer> S = new ArrayList<Integer>();
 
 
 	// Constuctor
@@ -71,11 +73,16 @@ class FleuryPrimSolver{
 	}
 
 	private void init_VS(){
-		for(int i = 0; i < N; i++)
-			for(int j = 0; j < N; j++)
-				if(matrix[i][j] == 1){
-					V_S.add(j);
-				}
+		// for(int i = 0; i < N; i++)
+		// 	for(int j = 0; j < N; j++)
+		// 		if(matrix[i][j] == 1){
+		// 			V_S.add(j);
+		// 		}
+
+		for(int i = 0; i < N; i++){
+			V_S.add(i);
+		}
+
 	}
 	private void init_LL(){
 		// Storing all edges for each vertex
@@ -177,35 +184,30 @@ class FleuryPrimSolver{
 		V-S = {2,3,4,5,6,7,8}
 	*/
 
+/* OLD SOLUTION BUT BROKEN
 		System.out.printf("prims_algo_check-->\n\tcurrent = [%d]\n\tendpoint = [%d]\n", current, endPoint);
 
 
 
 		System.out.println(V_S.toString());
-		if(V_S.size() == 0){
-			System.out.println("Size == 0");
-			return true;
-		}
+		// if(V_S.size() == 0){
+		// 	System.out.println("Size == 0");
+		// 	return true;
+		// }
 		// Adding the edge currentEndpoint will mean the next current node is endpoint
 		if(V_S.contains(endPoint)){
 
 			System.out.println("Contains");
 			V_S.remove(endPoint);
 			S.add(endPoint);
+
+
+
 			for(int i = 0; i < N; i++){
 				if(edges.get(endPoint).contains(i)){
 					return true;
 				}
 			}
-			// System.out.println("Printing V_S:");
-			// node = V_S.iterator();
-			// while(node.hasNext()){
-			// 	if(edges.get(endPoint).contains(node.next())){
-			// 		System.out.println("All good");
-			// 		return true;
-			// 	}
-			// }
-			// System.out.println("Done printing V_S");
 
 
 
@@ -215,7 +217,52 @@ class FleuryPrimSolver{
 			return false;
 		}
 		System.out.println("Does not contain");
-		return false;
+*/
+
+		int v;
+
+		if(V_S.size() == 0){
+			System.out.println("Size is 0");
+			return true;
+		}
+		// if(V_S.contains(endPoint)){
+
+			Random rand = new Random();
+			v = rand.nextInt(N);
+
+			int verts_visited = N;
+
+
+
+
+
+			System.out.printf("prims_algo_check-->\n\tcurrent = [%d]\n\tendpoint = [%d]\n", current, endPoint);
+			System.out.println("V_S: " + V_S.toString());
+			System.out.println("S: " + S.toString());
+
+			while(!V_S.isEmpty()){
+
+				int flag = 0;
+				for(int i = 0; i < S.size(); i++){
+					for(int j = 0; j < V_S.size(); j++){
+						if(edges.get(S.get(i)).contains(V_S.get(j))){
+							System.out.println("Returning True with: " + V_S.get(j) + " from: " + S.get(i));
+							S.add(endPoint);
+							for(int k = 0; k < V_S.size(); k++){
+								if(V_S.get(k) == endPoint)
+								V_S.remove(k);
+							}
+							return true;
+						}
+						System.out.println("Trying again..." );
+					}
+				}
+			}
+			System.out.println("V_S is empty");
+			return false;
+		// }
+		// System.out.println("Returing False");
+		// return false;
 		// return true;
 	}
 
@@ -276,49 +323,56 @@ class FleuryPrimSolver{
 		int current;
 		int endPoint = 0;
 		int numVertices = N;
-		int graph_size;
+		int flag = 0;
 		ArrayList<Integer> circuit = new ArrayList<Integer>();
 
 		temp = new int [N][N];
 		temp = matrix;
 
-		// Store number of edges in graph
 		graph_size = size_of_graph();
 
 		// Start at any vertex (start vertex)
 		current = start;
-		V_S.remove(current);
+		for(int i = 0; i < V_S.size(); i++){
+			if(V_S.get(i) == endPoint)
+				V_S.remove(i);
+		}
 		S.add(current);
 		circuit.add(current);
 
 
 		// print_neighborhood_graph();
 		// System.out.print("List: ");
-		print_neighborhood_set();
 		// print_neighborhood_map();
 		// print_neighborhood_graph();
-		print_matrix(temp);
+		// print_matrix(temp);
 
-		System.out.print((char)(current + 65)+ " ");
+		// System.out.print((char)(current + 65)+ " ");
 		while (graph_size > 0){
 			// Choose an edge that doesnt increase connected components
 				// use prims_algo()
-				System.out.println("Current: " + (char)(current + 65));
-				print_neighborhood_set();
-				print_matrix(temp);
+				// print_neighborhood_set();
+				// print_matrix(temp);
 
+			// System.out.println("Current: " + (char)(current + 65));
+			System.out.println("Current: " + (current));
+			print_neighborhood_set();
 			for(int del_vert = 0; del_vert < N; del_vert++){
 				if(temp[current][del_vert] == 1 && prims_algo_check(current, del_vert)){
+						System.out.println("Back in Fleuify");
+						System.out.println();
+						System.out.println("-------------------------------");
 						endPoint = del_vert;
+
+						flag = 1;
 						break;
 				}
 			}
 
-
 			// Add edge to the circuit and delete it from the graph
 				circuit.add(endPoint);
 
-				System.out.print((char)(endPoint + 65));
+				// System.out.print((char)(endPoint + 65));
 				// Removes edges that have end vertices current and endPoint
 				// remove_edge_in_graph(current, endPoint);
 				// remove_edge_in_map(current, endPoint);
@@ -331,10 +385,10 @@ class FleuryPrimSolver{
 			}
 
 		// print_neighborhood_map();
-		print_neighborhood_set();
+		// print_neighborhood_set();
 		// print_neighborhood_graph();
 
-		print_matrix(temp);
+		// print_matrix(temp);
 
 		System.out.println("Path: " +  circuit.toString() );
 		for(Integer node : circuit){
