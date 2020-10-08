@@ -219,45 +219,75 @@ class FleuryPrimSolver{
 		System.out.println("Does not contain");
 */
 
+		boolean [] visited = new boolean[N];
+		Arrays.fill(visited, false);
 		int v;
 
 		if(V_S.size() == 0){
-			System.out.println("Size is 0");
+			System.out.println("All vertices visited: V_S is empty");
 			return true;
 		}
 		// if(V_S.contains(endPoint)){
 
-			Random rand = new Random();
-			v = rand.nextInt(N);
+			// Random rand = new Random();
+			// v = rand.nextInt(N);
+			//
+			// int verts_visited = N;
+			if(!S.contains(current))
+				S.add(current);
+			if(V_S.contains(current)){
+				for(int k = 0; k < V_S.size(); k++){
+					if(V_S.get(k) == current)
+					V_S.remove(k);
+				}
+			}
 
-			int verts_visited = N;
 
-
-
-
-
-			System.out.printf("prims_algo_check-->\n\tcurrent = [%d]\n\tendpoint = [%d]\n", current, endPoint);
+			System.out.printf("prims_algo_check-->\n\tstartpoint = [%d]\n\tendpoint = [%d]\n", current, endPoint);
 			System.out.println("V_S: " + V_S.toString());
 			System.out.println("S: " + S.toString());
 
+			// do{
+			// 	int flag = 0;
+			// 	for(int i = 0; i < S.size(); i++){
+			// 		for(int j = 0; j < V_S.size(); j++){
+			// 			if(edges.get(S.get(i)).contains(V_S.get(j))){
+			// 				System.out.println("Returning True with: " + V_S.get(j) + " from: " + S.get(i));
+			//
+			// 				return true;
+			// 			}
+			// 			System.out.println("Trying again..." );
+			// 		}
+			// 	}
+			// }while(!V_S.isEmpty());
+
+			// S.add(endPoint);
+			// for(int k = 0; k < V_S.size(); k++){
+			// 	if(V_S.get(k) == endPoint)
+			// 	V_S.remove(k);
+			// }
 			while(!V_S.isEmpty()){
 
 				int flag = 0;
 				for(int i = 0; i < S.size(); i++){
 					for(int j = 0; j < V_S.size(); j++){
-						if(edges.get(S.get(i)).contains(V_S.get(j))){
+						if(edges.get(S.get(i)).contains(V_S.get(j)) ){
 							System.out.println("Returning True with: " + V_S.get(j) + " from: " + S.get(i));
+							System.out.printf("S[i]: %d\tV_S[j]: %d\n", S.get(i), V_S.get(j));
 							S.add(endPoint);
 							for(int k = 0; k < V_S.size(); k++){
 								if(V_S.get(k) == endPoint)
 								V_S.remove(k);
 							}
+
 							return true;
 						}
-						System.out.println("Trying again..." );
+						System.out.println("Trying again... from " +V_S.get(j) + " from: " + S.get(i) );
 					}
 				}
 			}
+
+
 			System.out.println("V_S is empty");
 			return false;
 		// }
@@ -328,19 +358,18 @@ class FleuryPrimSolver{
 
 		temp = new int [N][N];
 		temp = matrix;
+		print_matrix(temp);
+	
+		// for(int i = 0; i < N; i++){
+		// }
+
 
 		graph_size = size_of_graph();
 
 		// Start at any vertex (start vertex)
 		current = start;
-		for(int i = 0; i < V_S.size(); i++){
-			if(V_S.get(i) == endPoint)
-				V_S.remove(i);
-		}
-		S.add(current);
+
 		circuit.add(current);
-
-
 		// print_neighborhood_graph();
 		// System.out.print("List: ");
 		// print_neighborhood_map();
@@ -357,16 +386,34 @@ class FleuryPrimSolver{
 			// System.out.println("Current: " + (char)(current + 65));
 			System.out.println("Current: " + (current));
 			print_neighborhood_set();
+			print_matrix(temp);
 			for(int del_vert = 0; del_vert < N; del_vert++){
-				if(temp[current][del_vert] == 1 && prims_algo_check(current, del_vert)){
+				// if(temp[current][del_vert] == 1 && prims_algo_check(current, del_vert)){
+				// 		System.out.println("Back in Fleuify");
+				// 		System.out.println();
+				// 		System.out.println("-------------------------------");
+				// 		endPoint = del_vert;
+				//
+				// 		flag = 1;
+				// 		break;
+				// }
+
+				// System.out.println("Checking current row: " + current);
+				// print_matrix(temp);
+				if(temp[current][del_vert] == 1){
+					if(prims_algo_check(current, del_vert)){
+
 						System.out.println("Back in Fleuify");
 						System.out.println();
 						System.out.println("-------------------------------");
 						endPoint = del_vert;
 
-						flag = 1;
+						//flag = 1;
 						break;
+					}
 				}
+				System.out.println("Miss");
+
 			}
 
 			// Add edge to the circuit and delete it from the graph
@@ -376,6 +423,7 @@ class FleuryPrimSolver{
 				// Removes edges that have end vertices current and endPoint
 				// remove_edge_in_graph(current, endPoint);
 				// remove_edge_in_map(current, endPoint);
+
 				remove_edge_in_set(current, endPoint);
 				remove_edge_in_matrix(current, endPoint, temp);
 				graph_size--;
