@@ -64,20 +64,23 @@ private void init_LM(){
 		edges_avail.get(i).put(j, true);
 	}
 }
-/*-----------DEPRACATED-----------*/
+
+// Creating an adjacency Matrix
+ArrayList<ArrayList<Integer>> edge_in_graph;
+ArrayList<HashSet<Integer>> edges_copy;
+ArrayList<HashMap<Integer, Boolean>> edges_avail;
+
+// HashSet<Integer> V_S = new HashSet<Integer>();
+	/*-----------DEPRACATED-----------*/
 
 
 	// Stores the number of nodes in a the graph
 	int N;
 
 	int graph_size;
-	// Creating an adjacency Matrix
+
 	int [][] matrix;
-	ArrayList<ArrayList<Integer>> edge_in_graph;
 	ArrayList<HashSet<Integer>> edges;
-	ArrayList<HashSet<Integer>> edges_copy;
-	ArrayList<HashMap<Integer, Boolean>> edges_avail;
-	// HashSet<Integer> V_S = new HashSet<Integer>();
 	ArrayList<Integer> V_S = new ArrayList<Integer>();
 	ArrayList<Integer> V_S_Master = new ArrayList<Integer>();
 	ArrayList<Integer> S = new ArrayList<Integer>();
@@ -132,21 +135,12 @@ private void init_LM(){
 
 		init_LL();
 		init_LH();
+
+
 		// init_LM();
 		// init_VS();
 
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 	private void init_LL(){
 		// Storing all edges for each vertex
@@ -344,10 +338,9 @@ private void init_LM(){
 	*/
 
 
-	// Clears the S set and then adds the starting vertex for prim's
-	private void init_S(int y){
+	// Clears the S set
+	private void init_S(){
 		S.clear();
-		S.add(y);
 	}
 
 	// Adds a new element to the S set
@@ -363,6 +356,7 @@ private void init_LM(){
 	}
 
 	private void init_V_S_Master(){
+		V_S_Master.clear();
 		for(int i = 0; i < N ; i++)
 			V_S_Master.add(i);
 	}
@@ -381,14 +375,17 @@ private void init_LM(){
 		V_S_Master.clear();
 
 		for(int i = 0; i < N; i++)
-		V_S_Master.add(i);
+			V_S_Master.add(i);
 	}
 
 	// Initializes the V_S set and updates the current available nodes (removes nodes that have a degree of 0)
-	private void init_V_S(int y){
+	private void init_V_S(){
 		V_S.clear();
 		// V_S = (ArrayList)V_S_Master.clone();
+		// System.out.println("What");
 		cloneArrayList(V_S_Master, V_S);
+		// System.out.println("The fuck");
+		// update_V_S(y);
 	}
 
 	// Removes an element from V_S
@@ -405,7 +402,7 @@ private void init_LM(){
 	// Initalizes the Visited array list
 	private void init_Visited(){
 		for(int i = 0; i < N; i++)
-		Visited.add(i);
+			Visited.add(i);
 	}
 
 	// Returns true if all the vertices have been visited
@@ -419,7 +416,10 @@ private void init_LM(){
 
 		// Nodes that have a degree of 0 should no longer be considered in Prims's algorithm
 		if(edges.get(x).size() == 0){
+			System.out.println("Updating master in isDegreeZero");
 			update_V_S_Master(x);
+			init_V_S();
+
 			return;
 		}
 
@@ -447,11 +447,15 @@ private void init_LM(){
 	// Removes inverted instances of an edge in the graph
 	// i.e. edge AB = edge BA, they are the same edge but are each stored in the data structure
 	private void remove_edge_in_set(int endL, int endR){
+		// System.out.println("1");
 		edges.get(endL).remove(endR);
+		// System.out.println("2");
 		edges.get(endR).remove(endL);
+		// System.out.println("3");
 
 		// Mark node as visited
 		Visited.remove(endL);
+		// System.out.println("4");
 	}
 	private void remove_edge_in_matrix(int endL, int endR, int [][] temp){
 		temp[endL][endR] = 0;
@@ -474,41 +478,56 @@ private void init_LM(){
 		return (y == start);
 	}
 
-	private void init_stuff(int x, int y){
-
+	private void init_structures(int x, int y){
+		init_V_S_Master();
+		init_S();
+		init_V_S();
+		init_Visited();
 	}
 
-	private void doStuff(int x, int y){
+	private void doStuff(int vertex){
 		// update S by adding y to it
+		update_S(vertex);
+		update_V_S(vertex);
 	}
 
 
 	public boolean prims_algo_check(int x, int y, int start){
 
 		int flag = -1;
-		System.out.printf("Removing edge: [x,y]->[%d,%d]\n", x, y);
+		System.out.printf("edge: [x,y]->[%d,%d]\n", x, y);
 
-		init_stuff(x,y);
-		while(!all_verts_visited()){
+		// while(!all_verts_visited()){
+			System.out.println("Starting: initializing structures");
+			init_structures(x,y);
+			System.out.println("S: " + S.toString());
+			System.out.println("V_S: " + V_S.toString());
+			doStuff(y);
+
+			System.out.println("Done: initializing structures");
+			System.out.println("Starting: remove edge in set");
 			remove_edge_in_set(x,y);
+			System.out.println("Done: remove edge in set");
+			// System.out.println("hello");
+			print_neighborhood_set();
+			System.out.println("Starting: isDegreeZero");
 			isDegreeZero(x);
+			System.out.println("Done: isDegreeZero");
 
 			if(y_is_start(y, start) && all_verts_visited())
 				return true;
 			else if (y_is_start(y, start)){
 				addBack(x,y);
-				continue;
+				return false;
 			}
 
-			init_S(y);
-			init_V_S(y);
 
 			while(!V_S.isEmpty()){
 				for(int i = 0; i < S.size(); i++){
 					flag = 0;
 					for(int j = 0; j < V_S.size(); j++){
 						if(foundLink(i,j)){
-							doStuff(x,y);
+							doStuff(V_S.get(j));
 							flag = 1;
 							break;
 						}
@@ -516,10 +535,12 @@ private void init_LM(){
 					if (flag == 1)
 						break;
 				}
-				if(flag == 0)
+				if(flag == 0){
+					addBack(x,y);
 					return false;
+				}
 			}
-		}
+		// }
 		return true;
 	}
 
@@ -550,6 +571,7 @@ private void init_LM(){
 		while (graph_size > 0){
 			// Choose an edge that doesnt increase connected components
 			System.out.println("Current: " + (current));
+			System.out.println("Before removing edge");
 			print_neighborhood_set();
 
 			for(int del_vert = 0; del_vert < N; del_vert++){
