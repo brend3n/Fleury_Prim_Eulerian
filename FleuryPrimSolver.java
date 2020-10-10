@@ -416,9 +416,12 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 
 		// Nodes that have a degree of 0 should no longer be considered in Prims's algorithm
 		if(edges.get(x).size() == 0){
+			System.out.println("Node " + x +" has a degree of 0");
 			System.out.println("Updating master in isDegreeZero");
 			update_V_S_Master(x);
-			init_V_S();
+			update_V_S(x);
+			System.out.println("S: " + S.toString());
+			System.out.println("V_S updated: " + V_S.toString());
 
 			return;
 		}
@@ -479,7 +482,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 	}
 
 	private void init_structures(int x, int y){
-		init_V_S_Master();
+		// init_V_S_Master();
 		init_S();
 		init_V_S();
 		init_Visited();
@@ -498,25 +501,27 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		System.out.printf("edge: [x,y]->[%d,%d]\n", x, y);
 
 		// while(!all_verts_visited()){
-			System.out.println("Starting: initializing structures");
+			// System.out.println("Starting: initializing structures");
 			init_structures(x,y);
+			doStuff(y);
 			System.out.println("S: " + S.toString());
 			System.out.println("V_S: " + V_S.toString());
-			doStuff(y);
 
-			System.out.println("Done: initializing structures");
-			System.out.println("Starting: remove edge in set");
+			// System.out.println("Done: initializing structures");
+			// System.out.println("Starting: remove edge in set");
 			remove_edge_in_set(x,y);
-			System.out.println("Done: remove edge in set");
+			System.out.println("Visited: " + Visited.toString());
+			// System.out.println("Done: remove edge in set");
 			// System.out.println("hello");
-			print_neighborhood_set();
-			System.out.println("Starting: isDegreeZero");
+			// System.out.println("Starting: isDegreeZero");
+			// System.out.println("Done: isDegreeZero");
 			isDegreeZero(x);
-			System.out.println("Done: isDegreeZero");
+			print_neighborhood_set();
 
 			if(y_is_start(y, start) && all_verts_visited())
 				return true;
 			else if (y_is_start(y, start)){
+				System.out.println("In ELSE IF\n\n");
 				addBack(x,y);
 				return false;
 			}
@@ -527,6 +532,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 					flag = 0;
 					for(int j = 0; j < V_S.size(); j++){
 						if(foundLink(i,j)){
+							System.out.printf("%d -> %d\n", S.get(i), V_S.get(j));
 							doStuff(V_S.get(j));
 							flag = 1;
 							break;
@@ -562,7 +568,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		temp = matrix;
 
 		graph_size = size_of_graph();
-
+		init_V_S_Master();
 		// Start at any vertex (start vertex)
 		current = start;
 
@@ -570,7 +576,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 
 		while (graph_size > 0){
 			// Choose an edge that doesnt increase connected components
-			System.out.println("Current: " + (current));
+			System.out.println("\nCurrent: " + (current));
 			System.out.println("Before removing edge");
 			print_neighborhood_set();
 
