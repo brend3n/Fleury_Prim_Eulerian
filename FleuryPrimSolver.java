@@ -211,25 +211,21 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		}
 	}
 
-	// Writes the input string (input) into the first line of the output file (filename)
-	public static void writeToFile(String filename, int input){
-
-		try{
-			FileWriter writer = new FileWriter(filename);
-			writer.write(input + "\n");
-			writer.close();
-
-		}catch(IOException f){
-			System.out.println("Error in: FleuryPrimSolver(" + filename +")\n Exception: " + f);
-		}
-
-
-	}
-
 	private static void writeArrayListToFile(String filename, ArrayList<Integer> list){
-		for(Integer element : list){
-			writeToFile(filename, element);
-		}
+		String listStr;
+		// System.out.println("Path: " +  list.toString() );
+
+		// System.out.println("here");
+		listStr = list.toString();
+		// System.out.println(listStr);
+		listStr = listStr.replace("[", "");
+		listStr = listStr.replace("]", "");
+		writeToFile(filename, listStr);
+		// System.out.println("after stripping");
+		// System.out.println(listStr);
+
+		// System.out.println("HEREEREE\n\n\n\n\n\n");
+		// System.out.println(listStr);
 	}
 
 	private int size_of_graph(){
@@ -512,30 +508,24 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 	public boolean prims_algo_check(int x, int y, int start){
 
 		int flag = -1;
-		System.out.printf("edge: [x,y]->[%d,%d]\n", x, y);
+		// System.out.printf("edge: [x,y]->[%d,%d]\n", x, y);
 
-		// while(!all_verts_visited()){
-			// System.out.println("Starting: initializing structures");
 			init_structures_prims();
 			doStuff(y);
-			System.out.println("S: " + S.toString());
-			System.out.println("V_S: " + V_S.toString());
+			// System.out.println("S: " + S.toString());
+			// System.out.println("V_S: " + V_S.toString());
 
-			// System.out.println("Done: initializing structures");
-			// System.out.println("Starting: remove edge in set");
 			remove_edge_in_set(x,y);
-			System.out.println("Visited: " + Visited.toString());
-			// System.out.println("Done: remove edge in set");
-			// System.out.println("hello");
-			// System.out.println("Starting: isDegreeZero");
-			// System.out.println("Done: isDegreeZero");
+			// System.out.println("Visited: " + Visited.toString());
+
+
 			isDegreeZero(x);
-			print_neighborhood_set();
+			// print_neighborhood_set();
 
 			if(y_is_start(y, start) && all_verts_visited())
 				return true;
 			else if (y_is_start(y, start) && getDegree(y) == 1){
-				System.out.println("In ELSE IF\n\n");
+				// System.out.println("In ELSE IF\n\n");
 				addBack(x,y);
 				return false;
 			}
@@ -546,7 +536,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 					flag = 0;
 					for(int j = 0; j < V_S.size(); j++){
 						if(foundLink(i,j)){
-							System.out.printf("%d -> %d\n", S.get(i), V_S.get(j));
+							// System.out.printf("%d -> %d\n", S.get(i), V_S.get(j));
 							doStuff(V_S.get(j));
 							flag = 1;
 							break;
@@ -576,7 +566,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		int endPoint = -1;
 		int numVertices = N;
 		int flag = 0;
-		ArrayList<Integer> circuit = new ArrayList<Integer>();
+		ArrayList<Integer> circuit = new ArrayList<Integer>(200);
 
 		temp = new int [N][N];
 		temp = matrix;
@@ -590,9 +580,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 
 		while (graph_size > 0){
 			// Choose an edge that doesnt increase connected components
-			System.out.println("\nCurrent: " + (current));
-			System.out.println("Before removing edge");
-			print_neighborhood_set();
+			// print_neighborhood_set();
 
 			for(int del_vert = 0; del_vert < N; del_vert++){
 				if(temp[current][del_vert] == 1 && prims_algo_check(current, del_vert, start)){
@@ -609,12 +597,12 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 			graph_size--;
 		}
 
-		System.out.println("Path: " +  circuit.toString() );
-		for(Integer node : circuit){
-			System.out.print((char)(node + 65));
-		}
+		// System.out.println("Path: " +  circuit.toString() );
+		// for(Integer node : circuit){
+		// 	System.out.print((char)(node + 65));
+		// }
 
-		// writeArrayListToFile("output.txt", circuit);
+		writeArrayListToFile("output.txt", circuit);
 
 	}
 
