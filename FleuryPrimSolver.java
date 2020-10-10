@@ -405,6 +405,12 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 			Visited.add(i);
 	}
 
+	private void update_Visited(int element){
+		for(int i = 0; i < Visited.size(); i++)
+			if(Visited.get(i) == element)
+				Visited.remove(i);
+	}
+
 	// Returns true if all the vertices have been visited
 	private boolean all_verts_visited(){
 		return (Visited.size() == 0);
@@ -457,7 +463,8 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		// System.out.println("3");
 
 		// Mark node as visited
-		Visited.remove(endL);
+		update_Visited(endL);
+		// Visited.remove(endL);
 		// System.out.println("4");
 	}
 	private void remove_edge_in_matrix(int endL, int endR, int [][] temp){
@@ -481,10 +488,14 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		return (y == start);
 	}
 
-	private void init_structures(int x, int y){
-		// init_V_S_Master();
+	private void init_structures_prims(){
+
 		init_S();
 		init_V_S();
+
+	}
+	private void init_structures_fleury(){
+		init_V_S_Master();
 		init_Visited();
 	}
 
@@ -494,6 +505,9 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		update_V_S(vertex);
 	}
 
+	private int getDegree(int node){
+		return edges.get(node).size();
+	}
 
 	public boolean prims_algo_check(int x, int y, int start){
 
@@ -502,7 +516,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 
 		// while(!all_verts_visited()){
 			// System.out.println("Starting: initializing structures");
-			init_structures(x,y);
+			init_structures_prims();
 			doStuff(y);
 			System.out.println("S: " + S.toString());
 			System.out.println("V_S: " + V_S.toString());
@@ -520,7 +534,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 
 			if(y_is_start(y, start) && all_verts_visited())
 				return true;
-			else if (y_is_start(y, start)){
+			else if (y_is_start(y, start) && getDegree(y) == 1){
 				System.out.println("In ELSE IF\n\n");
 				addBack(x,y);
 				return false;
@@ -568,7 +582,7 @@ ArrayList<HashMap<Integer, Boolean>> edges_avail;
 		temp = matrix;
 
 		graph_size = size_of_graph();
-		init_V_S_Master();
+		init_structures_fleury();
 		// Start at any vertex (start vertex)
 		current = start;
 
