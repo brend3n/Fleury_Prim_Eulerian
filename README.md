@@ -1,4 +1,4 @@
-# # FleuryPrimSolver
+## FleuryPrimSolver
 
 # Author: Brenden Morton
 # Course: Network Optimization
