@@ -18,9 +18,9 @@
 ####	1. Navigate to the directory where the FleuryPrimSolver.jar file is located using 'cd' commands
 
 ####	2. Run the following command:
-				
-####				java -jar FleuryPrimSolver.jar [filename of the graph] [start vertex] [total number of vertices]
-
+	
+		java -jar FleuryPrimSolver.jar [filename of the graph] [start vertex] [total number of vertices]
+		
 ### The input file should be a square adjancency matrix of integers separated by commas. A '0' represents no edge between two nodes.
 ### Additionally, the leftmost character of each row should be an integer representing the row. After, this character should be a '\t' tab character.
 ### Below is a simple example of what the input file should look like:
